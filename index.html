@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+    font-family: "Verdana", sans-serif;
+    background: linear-gradient(rgb(240, 240, 250), rgb(250, 240, 240),
+                                rgb(240, 250, 240));
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+#tree {
+    width: 95%;
+    height: 800px;
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+}
+</style>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src='scripts/getJsonFromXml.js'></script>
+<script src='scripts/drawTree.js'></script>
+
+<script>
+function draw_tree() {
+    var treeURL = document.getElementById('mindmapURL').value;
+    console.log('reading tree from:', treeURL);
+    var treeData = getJsonFromXml(treeURL);
+    var svgElement = document.getElementById('tree');
+    drawTree(treeData, svgElement);
+}
+</script>
+
+</meta>
+
+<body>
+Freeplane mindmap URL:
+<input type="text" id="mindmapURL" name="mindmapURL" value="https://raw.githubusercontent.com/MMesch/freeplane_with_d3js/master/mindmaps/test.mm"><br>
+<button onclick="draw_tree()">Submit</button>
+
+<svg id="tree">
+</svg>
+
+</body>
