@@ -98,12 +98,14 @@ function drawTree(treeData, domElement) {
         // Add labels for the nodes
         nodeEnter.append('text')
             .attr("dy", ".35em")
+            .attr("dx", "-10")
             .attr("x", "0")
-            .attr("text-anchor", "middle")
+            .attr("text-anchor", "left")
             .text(function(d) { return d.data.name; }).call(getBB)
             .attr('pointer-events', 'none');
         nodeEnter.insert("rect", "text")
-            .attr("x", function(d){return -d.bbox.width/2})
+            //.attr("x", function(d){return -d.bbox.width/2})
+            .attr("x", "-10")
             .attr("y", function(d){return -d.bbox.height/2})
             .attr("width", function(d){return d.bbox.width})
             .attr("height", function(d){return d.bbox.height})
