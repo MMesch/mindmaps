@@ -19,7 +19,9 @@ function drawTree(treeData, domElement) {
             height = domElement.getBoundingClientRect().height;
         var svg = d3.select(domElement);
     }
-    
+   
+    d3.selectAll("svg > *").remove();
+
     var i = 0,
         duration = 750,
         root;

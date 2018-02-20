@@ -34,7 +34,10 @@ body {
 
 <script>
 function draw_tree() {
-    var treeURL = document.getElementById('mindmapURL').value;
+    var treeURL = document.getElementById('mindmap_selector').value;
+    if(treeURL == 'custom_url'){
+        treeURL = document.getElementById('mindmapURL').value;
+    };
     console.log('reading tree from:', treeURL);
     var treeData = getJsonFromXml(treeURL);
     var svgElement = document.getElementById('tree');
@@ -48,6 +51,15 @@ function draw_tree() {
 Freeplane mindmap URL:
 <input type="text" id="mindmapURL" name="mindmapURL" value="https://raw.githubusercontent.com/MMesch/freeplane_with_d3js/master/mindmaps/test.mm"><br>
 <button onclick="draw_tree()">Submit</button>
+
+<select id="mindmap_selector">
+  <option value="custom_url">Custom URL</option>
+  <option value="mindmaps/AmazonWebServices.mm">Amazon Web Services</option>
+  <option value="mindmaps/ApacheHadoop.mm">Apache Hadoop</option>
+  <option value="mindmaps/Docker.mm">Docker</option>
+  <option value="mindmaps/Haskell.mm">Haskell</option>
+  <option value="mindmaps/Python.mm">Python</option>
+</select>
 
 <svg id="tree">
 </svg>
