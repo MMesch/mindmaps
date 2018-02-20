@@ -35,12 +35,28 @@ function drawTree(treeData, domElement) {
     root.x0 = height / 2;
     root.y0 = 0;
 
-    // Collapse after the second level
+    // first set colors for each branch
+    var n_branches = root.children.length;
+    var colors = d3.scaleLinear().domain([0, n_branches]).range([0, 360]);
+
+    root.children.forEach(function(d, i) {d.color=d3.hsl(colors(i), 0.5, 0.5)});
+    root.children.forEach(set_color);
+
+    // now collapse after the second level
     root.children.forEach(collapse);
 
     // draw the updated tree
     update(root);
     
+    function set_color(d) {
+        if(d.parent.color){
+            d.color = d.parent.color;
+        }
+        if(d.children) {
+            d.children.forEach(set_color);
+        }
+    }
+
     // Collapse the node and all it's children
     // collapsed children are saved with a _ prefix
     function collapse(d) {
@@ -85,6 +101,7 @@ function drawTree(treeData, domElement) {
 
     function update_nodes(nodes, source) { 
         // Update the nodes...
+        console.log(nodes);
         var node = svg.selectAll('g.node')
             .data(nodes, function(d) {return d.id || (d.id = ++i); });
     
@@ -98,19 +115,18 @@ function drawTree(treeData, domElement) {
         // Add labels for the nodes
         nodeEnter.append('text')
             .attr("dy", ".35em")
-            .attr("dx", "-10")
-            .attr("x", "0")
-            .attr("text-anchor", "left")
-            .text(function(d) { return d.data.name; }).call(getBB)
+            .attr("dx", "-20")
+            .attr("text-anchor", function(d) {
+                return (d.parent == null) ? "middle" : "start";})
+            .text(function(d) {return d.data.name;}).call(getBB)
             .attr('pointer-events', 'none');
         nodeEnter.insert("rect", "text")
-            //.attr("x", function(d){return -d.bbox.width/2})
-            .attr("x", "-10")
+            .attr("x", function(d){return (d.parent == null) ? -d.bbox.width/2-20 : -20;})
             .attr("y", function(d){return -d.bbox.height/2})
             .attr("width", function(d){return d.bbox.width})
             .attr("height", function(d){return d.bbox.height})
-            .style("fill", "white")
-            .style('opacity', 0.8)
+            .style("fill", function(d){return (d.parent == null) ? "white" : d3.hsl(d.color.h, 0.5, 0.95)})
+            .style('opacity', 1.0)
             .attr('cursor', 'pointer');
     
         // UPDATE
@@ -150,8 +166,8 @@ function drawTree(treeData, domElement) {
             .attr("class", "link")
             .attr('d', function(d){
               var o = {x: source.x0, y: source.y0}
-              return diagonal_xdir(o, o)
-            });
+              return diagonal_xdir(o, o)})
+            .style('stroke', function(d){return d.color});
     
         // UPDATE
         var linkUpdate = linkEnter.merge(link);
