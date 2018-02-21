@@ -101,7 +101,6 @@ function drawTree(treeData, domElement) {
 
     function update_nodes(nodes, source) { 
         // Update the nodes...
-        console.log(nodes);
         var node = svg.selectAll('g.node')
             .data(nodes, function(d) {return d.id || (d.id = ++i); });
     

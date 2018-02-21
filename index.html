@@ -25,20 +25,26 @@
     }
 </style>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="scripts/d3.v4.min.js"></script>
 <script src='scripts/getJsonFromXml.js'></script>
 <script src='scripts/drawTree.js'></script>
+<script src='scripts/drawForce.js'></script>
 
 <script>
-function draw_tree() {
+
+function draw() {
+    // get all input parameters
     var treeURL = document.getElementById('mindmap_selector').value;
     if(treeURL == 'custom_url'){
-        treeURL = document.getElementById('mindmapURL').value;
-    };
+        treeURL = document.getElementById('mindmapURL').value;};
     console.log('reading tree from:', treeURL);
     var treeData = getJsonFromXml(treeURL);
     var svgElement = document.getElementById('tree');
-    drawTree(treeData, svgElement);
+   
+    // chose and draw layout
+    var layout = document.getElementById('layout_selector').value;
+    if(layout == 'tree') {drawTree(treeData, svgElement);}
+    else if(layout == 'force') {drawForce(treeData, svgElement);}
 }
 </script>
 
@@ -47,8 +53,8 @@ function draw_tree() {
 <body>
 Freeplane mindmap URL:
 <input type="text" id="mindmapURL" name="mindmapURL" value="https://raw.githubusercontent.com/MMesch/freeplane_with_d3js/master/mindmaps/test.mm"><br>
-<button onclick="draw_tree()">Submit</button>
 
+<div style="margin: 10px;">
 <select id="mindmap_selector">
   <option value="custom_url">Custom URL</option>
   <option value="mindmaps/AmazonWebServices.mm">Amazon Web Services</option>
@@ -57,6 +63,14 @@ Freeplane mindmap URL:
   <option value="mindmaps/Haskell.mm">Haskell</option>
   <option value="mindmaps/Python.mm">Python</option>
 </select>
+
+<select id="layout_selector">
+  <option value="tree">tree</option>
+  <option value="force">force</option>
+</select>
+
+<button onclick="draw()">Submit</button>
+</div>
 
 <svg id="tree">
 </svg>
