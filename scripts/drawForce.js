@@ -1,5 +1,5 @@
 /*
- * draws a collapsible tree from hierarchical JSON data
+ * draws a collapsible force graph from hierarchical JSON data
  */
 
 function drawForce(treeData, domElement) {
@@ -26,7 +26,6 @@ function drawForce(treeData, domElement) {
     var i = 0,
         duration = 750;
     
-    var treemap = d3.cluster().size([height, width]);
     // Assigns parent, children, height, depth
     root = d3.hierarchy(treeData, function(d) { return d.children; });
     var links = root.links();
@@ -36,12 +35,12 @@ function drawForce(treeData, domElement) {
     // set colors for each branch
     var n_branches = root.children.length;
     var colors = d3.scaleLinear().domain([0, n_branches]).range([0, 360]);
-    root.children.forEach(function(d, i) {d.color=d3.hsl(colors(i), 0.5, 0.5)});
+    root.children.forEach(function(d, i) {d.color=d3.hsl(colors(i), 0.1, 0.8)});
     root.children.forEach(set_color);
 
     // setup forces for diagram
     var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().distance(100).strength(1))
+        .force("link", d3.forceLink().distance(50).strength(1))
         .force("center", d3.forceCenter(width/2, height/2))
         .force("manybody", d3.forceManyBody().strength(-200))
         .on("tick", ticked);
@@ -83,9 +82,8 @@ function drawForce(treeData, domElement) {
           .enter()
           .append("line")
           .attr("class", "link")
-          .attr("stroke-width", "2px")
-          .attr("stroke", "#ddd")
-          .attr("z-order", -100)
+          .style("stroke", function(d) {return d.target.color})
+          .style("stroke-width", 1)
           .attr("x1", function(d) {
             return d.source.x;
           })
